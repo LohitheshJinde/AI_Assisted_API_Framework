@@ -1,0 +1,28 @@
+{
+    "objects": {
+        "auth_type" : "none",
+        "POST": {
+            "url": "https://api.restful-api.dev/objects",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "payload_key": "payload",
+            "test_case_name_key": "test_case_name",
+            "expected_status_code_key": "expected_status_code",
+            "test_description": "Test {test}",
+            "expected_status_code_success": 200,
+            "expected_status_code_failure": 400
+        },
+        "GET": {
+            "url": "https://api.restful-api.dev/objects/{primary_key}",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "primary_key": "response_payload.id",
+            "payload_key": "response_payload",
+            "test_description": "Validated {test}",
+            "expected_status_code_success": 200,
+            "expected_status_code_failure": 400
+        }
+    }
+}

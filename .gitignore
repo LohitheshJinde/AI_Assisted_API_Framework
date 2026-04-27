@@ -1,0 +1,42 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.cproject
+*.project
+*.settings/
+*.launch
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Logs
+logs/
+
+# Test outputs
+results/
+reports_output/
+testdata/
+
+# Secrets
+.env
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

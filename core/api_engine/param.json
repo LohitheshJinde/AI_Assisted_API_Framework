@@ -1,0 +1,30 @@
+{
+    "testdata_path": "testdata",
+    "file_process_count": 4,
+    "thread_count": 8,
+    "max_retries": 1,
+    "request_delay": 2,
+    "think_time": 0.1, 
+    "payload_key": "payload",
+    "excluded_folders": [
+        "__pycache__",
+        "logs"
+    ],
+    "certificate_name": "certificate_chain.pem",
+    "expected_codes": {
+        "success": 200,
+        "error": 400
+    },
+    "log_file_name": "execute_test_cases",
+    "request_type": [
+        "POST",
+        "GET",
+        "PATCH",
+        "PUT",
+        "DELETE"
+    ],
+    "auth_refresh_interval_min": 10, 
+    "auth_think_time_min": 10,
+    "log_message_template": "Thread-{thread_id}: Test case '{test_case_name}' sent.\nPayload: {payload}\nResponse: {response_data}\nExpected Status: {expected_status_code}, Actual Status: {actual_status_code}\nElapsed time for request: {elapsed_time} seconds.\n",
+    "summary_log_template": "Summary for {context}:\n{context} Total Requests: {total_req}\n{context} Test Cases Passed: {passed}\n{context} Test Cases Failed: {failed}\nPass Rate Percentage: {rate}\nElapsed Time for {context}: {elapsed_time} seconds\n"
+}

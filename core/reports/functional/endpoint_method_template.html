@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Report</title>
+    <style>
+        .chart-row {
+            display: flex;
+            justify-content: space-between;  /* Changed to space-between for more even distribution */
+            margin-bottom: 20px;
+        }
+        .chart {
+            flex: 0 1 45%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        img {
+            max-width: 100%;        /* Ensure the image scales with the container width */
+            max-height: 300px;      /* Set a max height for images, prevents stretching or clipping */
+            object-fit: contain;    /* Ensures the image is fully contained within the container, maintaining aspect ratio */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            color: #34495e;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #dcdcdc;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            font-size: 1.5em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            cursor: pointer; /* Indicate that table headers are clickable */
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .summary-table {
+            width: 80%;
+            margin: auto;
+        }
+        .summary-table th, .summary-table td {
+            text-align: left;
+            vertical-align: top;
+        }
+        .summary-header {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Highlight rows with status passed or failed */
+        .passed {
+            background-color: #94a4f1; /* light blue for passed */
+        }
+        .failed {
+            background-color: #eca386; /* light red for failed */
+        }
+        
+        /* Search bar styles */
+        .search-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .search-input {
+            width: 50%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Hide the charts initially */
+        .charts-container {
+            display: none; /* Charts are hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Report</h1>
+
+    <!-- Summary Table -->
+    <table class="summary-table">
+        <!-- Summary and Results in One Row -->
+        <tr class="summary-header">
+            <th colspan="2">Summary</th>
+            <th colspan="2">Results</th>
+        </tr>
+        <tr>
+            <td>Test Suite</td>
+            <td>{{ testSuite }}</td>
+            <td>Total</td>
+            <td>{{ total }}</td>
+        </tr>
+        <tr>
+            <td>Summary</td>
+            <td>{{ summary }}</td>
+            <td>Passed</td>
+            <td>{{ passed }}</td>
+        </tr>
+        <tr>
+            <td>Duration</td>
+            <td>{{ duration }}</td>
+            <td>Failed</td>
+            <td>{{ failed }}</td>
+        </tr>
+        <tr>
+            <td>Environment</td>
+            <td>{{ environment }}</td>
+            <td>Pass Rate</td>
+            <td>{{ pass_rate }}</td>
+        </tr>
+        <tr>
+            <td>Test Plan Key</td>
+            <td>{{ testPlanKey }}</td>
+            <td>Avg Response Time</td>
+            <td>{{ average_response_time }}</td>
+        </tr>
+        <tr>
+            <td>Test Execution Key</td>
+            <td>{{ testExecutionKey }}</td>
+            <td>Avg Test Case Time</td>
+            <td>{{ average_test_case_time }}</td>
+        </tr>
+
+        <!-- CI Job URL Row -->
+        <tr class="summary-header">
+            <th colspan="4">CI JOB URL</th>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <a href="{{ CI_JOB_URL }}" target="_blank">{{ CI_JOB_URL }}</a>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Toggle Link for Charts -->
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="toggleCharts()">Show/Hide Charts</button>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-container" id="chartsContainer">
+        <div class="chart-row">
+            <div class="chart">
+                <h2>Test Case Status Summary</h2>
+                <img src="{{ test_case_status_summary }}" alt="Test Case Status Summary">
+            </div>
+            <div class="chart">
+                <h2>Pass Rate Percentage</h2>
+                <img src="{{ pass_rate_chart }}" alt="Pass Rate Percentage">
+            </div>
+        </div>
+        <div class="chart-row">
+            <div class="chart">
+                <h2>Test Case Status Over Time</h2>
+                <img src="{{ test_case_status_over_time }}" alt="Test Case Status Over Time">
+            </div>
+            <div class="chart">
+                <h2>Response Time Comparison</h2>
+                <img src="{{ response_time_comparison }}" alt="Response Time Comparison">
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search test cases...">
+    </div>
+
+    <!-- Test Case Table -->
+    <h2>Test Case Details</h2>
+    <table id="testCasesTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Test Key</th>
+                <th onclick="sortTable(1)">Test Case Name</th>
+                <th onclick="sortTable(2)">Test Description</th>
+                <th onclick="sortTable(3)">Endpoint Method</th>
+                <th onclick="sortTable(4)">Response Time (ms)</th>
+                <th onclick="sortTable(5)">Test Case Time (ms)</th>
+                <th onclick="sortTable(6)">Status</th>
+                <th onclick="sortTable(7)">Unmatched</th>
+                <th onclick="sortTable(8)">Unmatched Attributes</th>
+            </tr>
+        </thead>
+        <tbody id="testTable">
+            {{ rows }}
+        </tbody>
+    </table>
+    <script>
+        // Function to toggle the charts' visibility
+        function toggleCharts() {
+            var chartsContainer = document.getElementById('chartsContainer');
+            if (chartsContainer.style.display === 'none' || chartsContainer.style.display === '') {
+                chartsContainer.style.display = 'block'; // Show charts
+            } else {
+                chartsContainer.style.display = 'none'; // Hide charts
+            }
+        }
+    
+        // Function to sort the table based on column index
+        function sortTable(colIndex) {
+            const table = document.getElementById('testCasesTable');
+            const rows = Array.from(table.querySelectorAll('tbody tr')); // Get rows from tbody
+    
+            // Toggle sorting order (ascending/descending)
+            const isAscending = table.querySelectorAll("th")[colIndex].classList.toggle("asc");
+            const order = isAscending ? 1 : -1;
+    
+            // Sort rows
+            rows.sort((a, b) => {
+                const cellA = a.cells[colIndex].innerText.trim();
+                const cellB = b.cells[colIndex].innerText.trim();
+    
+                // Check if the cells contain numeric values
+                const isNumeric = !isNaN(cellA) && !isNaN(cellB);
+    
+                if (isNumeric) {
+                    return order * (parseFloat(cellA) - parseFloat(cellB));
+                }
+    
+                // Default sorting for text content
+                return order * cellA.localeCompare(cellB);
+            });
+    
+            // Reorder rows in the table body
+            rows.forEach(row => table.querySelector('tbody').appendChild(row));
+    
+            // After sorting, reapply the search filter
+            applySearchFilter();
+        }
+    
+        // JavaScript for search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            applySearchFilter();
+        });
+    
+        // Apply search filter to the table rows
+        function applySearchFilter() {
+            const filter = document.getElementById('searchInput').value.toLowerCase(); // Get the search input
+            const rows = document.querySelectorAll('#testCasesTable tbody tr'); // Select all tbody rows
+    
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' '); // Combine cell text into one string
+                row.style.display = rowText.includes(filter) ? '' : 'none'; // Show or hide row based on filter
+            });
+        }
+    </script>
+</body>
+</html>

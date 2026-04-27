@@ -1,0 +1,22 @@
+# Core framework
+requests>=2.31.0
+behave>=1.2.6
+python-dotenv>=1.0.0
+jsonschema>=4.20.0
+python-dateutil>=2.8.2
+PyYAML>=6.0.1
+
+# Comparison
+numpy>=1.26.0
+
+# Reports
+Jinja2>=3.1.4
+pandas>=2.0.0
+matplotlib>=3.5.0
+seaborn>=0.11.2
+
+# XML utilities (optional — only if using xml_utls)
+lxml>=4.9.0
+
+# AWS helpers (optional — only if using core/awsresources)
+boto3>=1.34.0

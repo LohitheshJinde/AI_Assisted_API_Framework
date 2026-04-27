@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Testing Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            max-width: 1400px;
+            overflow: hidden;
+        }
+        .header-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .table {
+            min-width: 2400px;
+            font-size: 0.9rem;
+        }
+        .table thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 1px solid #adb5bd;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-align: center;
+            vertical-align: middle;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 14px 10px;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+        .table thead th:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #667eea 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        .table tbody td {
+            text-align: center;
+            vertical-align: middle;
+            border-color: #dee2e6;
+            padding: 10px 8px;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .table th:nth-child(1) { min-width: 120px; }
+        .table th:nth-child(2) { min-width: 180px; }
+        .table th:nth-child(3) { min-width: 250px; }
+        .table th:nth-child(4) { min-width: 150px; }
+        .table th:nth-child(5) { min-width: 100px; }
+        .table th:nth-child(6) { min-width: 100px; }
+        .table th:nth-child(7) { min-width: 120px; }
+        .table th:nth-child(8) { min-width: 120px; }
+        .table th:nth-child(9) { min-width: 100px; }
+        .table th:nth-child(10) { min-width: 140px; }
+        .table th:nth-child(11) { min-width: 140px; }
+        .table th:nth-child(12) { min-width: 140px; }
+        .table th:nth-child(13) { min-width: 140px; }
+        .table th:nth-child(14) { min-width: 140px; }
+        .table th:nth-child(15) { min-width: 140px; }
+        .table th:nth-child(16) { min-width: 140px; }
+        .table th:nth-child(17) { min-width: 140px; }
+        .table th:nth-child(18) { min-width: 100px; }
+        .table th:nth-child(19) { min-width: 120px; }
+        .table th:nth-child(20) { min-width: 120px; }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-passed {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+        .status-failed {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        .contract-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 50px;
+            font-size: 0.9rem;
+        }
+        .contract-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+        }
+        .contract-btn.zero {
+            background: #6c757d;
+            cursor: default;
+        }
+        .contract-btn.zero:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        .contract-btn.active {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+        }
+        .detail-row {
+            background: #f8f9fa;
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .detail-cell {
+            padding: 0 !important;
+            border-left: 4px solid #007bff;
+        }
+        .detail-container {
+            padding: 20px;
+            margin: 0;
+        }
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .detail-header h6 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .detail-content {
+            line-height: 1.6;
+        }
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: 25% 25%;
+            gap: 10px;
+            text-align: left;
+        }
+        .code-highlight {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            color: #212529;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            user-select: text;
+            cursor: text;
+            word-break: break-word;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .code-highlight:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-color: #dee2e6;
+        }
+        .code-highlight:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px 0 0 4px;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            height: 100%;
+        }
+        .chart-card h5 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .chart-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .search-box {
+            border-radius: 25px;
+            border: 2px solid #dee2e6;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+        .search-box:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        }
+        .nav-pills .nav-link {
+            border-radius: 25px;
+            margin: 0 5px;
+            font-weight: 500;
+        }
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        }
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header-section">
+            <h1><i class="bi bi-clipboard-check"></i> Contract Testing Report</h1>
+            <p class="lead">{{ summary }}</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="container-fluid p-0">
+            <ul class="nav nav-pills nav-fill p-3 bg-light" id="reportTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab">
+                        <i class="bi bi-graph-up"></i> Overview
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="details-tab" data-bs-toggle="pill" data-bs-target="#details" type="button" role="tab">
+                        <i class="bi bi-table"></i> Test Details
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="charts-tab" data-bs-toggle="pill" data-bs-target="#charts" type="button" role="tab">
+                        <i class="bi bi-bar-chart"></i> Analytics
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content p-4" id="reportTabsContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-list-check fs-1 mb-3"></i>
+                            <span class="stat-value">{{ total }}</span>
+                            <div class="stat-label">Total Tests</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-percent fs-1 mb-3"></i>
+                            <span class="stat-value">{{ pass_rate }}</span>
+                            <div class="stat-label">Pass Rate</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-check-circle fs-1 mb-3"></i>
+                            <span class="stat-value">{{ passed }}</span>
+                            <div class="stat-label">Passed</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-x-circle fs-1 mb-3"></i>
+                            <span class="stat-value">{{ failed }}</span>
+                            <div class="stat-label">Failed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="bi bi-speedometer2"></i> Performance Metrics</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h4 class="text-primary">{{ duration }}</h4>
+                                        <small class="text-muted">Duration</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h4 class="text-primary">{{ average_response_time }}ms</h4>
+                                        <small class="text-muted">Avg Response Time</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="bi bi-gear"></i> Test Management</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Test Plan:</strong> {{ testPlanKey }}</p>
+                                <p><strong>Execution Key:</strong> {{ testExecutionKey }}</p>
+                                <p><strong>Environment:</strong> <span class="badge bg-info">{{ environment }}</span></p>
+                                <a href="{{ CI_JOB_URL }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-link-45deg"></i> View CI/CD Job
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Tab -->
+            <div class="tab-pane fade" id="details" role="tabpanel">
+                <div class="row mb-4">
+                    <div class="col-md-6 mx-auto">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control search-box" id="searchInput" placeholder="Search test cases...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="testCasesTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0)">Test Key</th>
+                                <th onclick="sortTable(1)">Test Name</th>
+                                <th onclick="sortTable(2)">Description</th>
+                                <th onclick="sortTable(3)">Endpoint</th>
+                                <th onclick="sortTable(4)">Response<br>Time (ms)</th>
+                                <th onclick="sortTable(5)">Test<br>Time (ms)</th>
+                                <th onclick="sortTable(6)">Status</th>
+                                <th onclick="sortTable(7)">Contract<br>Status</th>
+                                <th onclick="sortTable(8)">Total<br>Issues</th>
+                                <th onclick="sortTable(9)">Req<br>Missing</th>
+                                <th onclick="sortTable(10)">Req<br>Type</th>
+                                <th onclick="sortTable(11)">Req<br>Extra</th>
+                                <th onclick="sortTable(12)">Req<br>Default</th>
+                                <th onclick="sortTable(13)">Resp<br>Missing</th>
+                                <th onclick="sortTable(14)">Resp<br>Type</th>
+                                <th onclick="sortTable(15)">Resp<br>Extra</th>
+                                <th onclick="sortTable(16)">Resp<br>Default</th>
+                                <th onclick="sortTable(17)">Unmatched</th>
+                                <th onclick="sortTable(18)">Attributes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ rows }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Charts Tab -->
+            <div class="tab-pane fade" id="charts" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="chart-card">
+                            <h5><i class="bi bi-pie-chart"></i> Test Case Status Summary</h5>
+                            <img src="{{ test_case_status_summary }}" alt="Test Case Status Summary" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-card">
+                            <h5><i class="bi bi-percent"></i> Pass Rate Percentage</h5>
+                            <img src="{{ pass_rate_chart }}" alt="Pass Rate Percentage" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-card">
+                            <h5><i class="bi bi-graph-up"></i> Status Over Time</h5>
+                            <img src="{{ test_case_status_over_time }}" alt="Test Case Status Over Time" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-card">
+                            <h5><i class="bi bi-speedometer2"></i> Response Time Comparison</h5>
+                            <img src="{{ response_time_comparison }}" alt="Response Time Comparison" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attributes are now displayed directly in the table -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to sort the table based on column index
+        function sortTable(colIndex) {
+            const table = document.getElementById('testCasesTable');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            const isAscending = table.querySelectorAll("th")[colIndex].classList.toggle("asc");
+            const order = isAscending ? 1 : -1;
+
+            rows.sort((a, b) => {
+                const cellA = a.cells[colIndex].innerText.trim();
+                const cellB = b.cells[colIndex].innerText.trim();
+                const isNumeric = !isNaN(cellA) && !isNaN(cellB);
+
+                if (isNumeric) {
+                    return order * (parseFloat(cellA) - parseFloat(cellB));
+                }
+                return order * cellA.localeCompare(cellB);
+            });
+
+            rows.forEach(row => table.querySelector('tbody').appendChild(row));
+            applySearchFilter();
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            applySearchFilter();
+        });
+
+        function applySearchFilter() {
+            const filter = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#testCasesTable tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+                row.style.display = rowText.includes(filter) ? '' : 'none';
+            });
+        }
+
+        function toggleDetails(testKey, type, details, button) {
+            const row = button.closest('tr');
+            const detailRowId = `detail-${testKey}-${type}`;
+            let detailRow = document.getElementById(detailRowId);
+            
+            if (detailRow) {
+                detailRow.remove();
+                button.classList.remove('active');
+                return;
+            }
+            
+            const titles = {
+                'reqMissing': 'Request Missing Attributes',
+                'reqTypeMismatch': 'Request Type Mismatches',
+                'reqExtra': 'Request Extra Attributes', 
+                'reqDefault': 'Request Default Mismatches',
+                'respMissing': 'Response Missing Attributes',
+                'respTypeMismatch': 'Response Type Mismatches',
+                'respExtra': 'Response Extra Attributes',
+                'respDefault': 'Response Default Mismatches'
+            };
+            
+            const detailsList = details ? details.split('|').filter(item => item.trim()) : [];
+            const attributesHtml = detailsList.length > 0 ? 
+                '<div class="attributes-grid">' + detailsList.map(item => `<div class="code-highlight">${item}</div>`).join('') + '</div>' :
+                '<div class="text-muted">No issues found</div>';
+            
+            const newRow = document.createElement('tr');
+            newRow.id = detailRowId;
+            newRow.className = 'detail-row';
+            newRow.innerHTML = `
+                <td colspan="19" class="detail-cell">
+                    <div class="detail-container">
+                        <div class="detail-header">
+                            <h6><i class="bi bi-info-circle text-primary"></i> ${titles[type]}</h6>
+                            <small class="text-muted">Test Case: ${testKey}</small>
+                        </div>
+                        <div class="detail-content">
+                            ${attributesHtml}
+                        </div>
+                    </div>
+                </td>
+            `;
+            
+            row.insertAdjacentElement('afterend', newRow);
+            button.classList.add('active');
+        }
+    </script>
+</body>
+</html>
