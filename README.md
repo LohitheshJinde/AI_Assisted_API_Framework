@@ -1,4 +1,4 @@
-# SmartTest API Framework
+# API Framework
 
 A data-driven, multi-threaded API testing framework built with Python. Supports REST API testing with automatic token management, response comparison, contract testing, and reporting.
 
@@ -26,18 +26,9 @@ smarttest-api/
 │   │   ├── Auth.py              # Token management (OAuth, Cognito, etc.)
 │   │   ├── param.json           # Default framework parameters
 │   │   ├── TestAPIRequests.py   # Generic test runner
-│   │   ├── TestGet.py           # GET runner
-│   │   ├── TestPost.py          # POST runner
-│   │   ├── TestPatch.py         # PATCH runner
-│   │   ├── TestPut.py           # PUT runner
-│   │   └── TestDelete.py        # DELETE runner
 │   ├── awsresources/            # AWS service helpers
-│   ├── confluence/               # Confluence upload utility
-│   ├── jira/                    # Jira test data uploader
 │   ├── reports/                 # HTML/JSON report generators
 │   ├── utils/                   # Comparison, config, utilities
-│   ├── xml_utls/                # XML parsing/creation helpers
-│   └── xray_cloud/              # Xray cloud integration
 ├── myapp/                       # Your application config (create this)
 │   └── param.json               # Endpoint definitions
 ├── testdata/                    # Test data JSON files (create this)
